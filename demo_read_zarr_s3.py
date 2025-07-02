@@ -337,7 +337,7 @@ try:
 	# ---- Read from a netcdf file the lat/lon of the unstructured mesh
 	#	   grid points.
 	
-	latlonfile = '/s3data/inference/corrdiff/graf/input/rpm4km.static.nc'
+	latlonfile = 'rpm4km.static.latlon.nc'
 	nc = Dataset(latlonfile, 'r')
 	lats = nc.variables['latCell'][:]*180./3.141592656
 	lons = nc.variables['lonCell'][:]*180./3.141592656
