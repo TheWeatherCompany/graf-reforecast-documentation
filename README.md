@@ -52,6 +52,7 @@ Where:
 - `<initial_condition_date>`: Initial condition date in YYYYMMDDHH format
 - `<lead_time>`: Lead time in hours (can include fractions for sub-hourly data)
 - `<variable>`: Variable name to plot
+- `<dry_run>`: True or False. Dry run use local lat long file
 
 ### Example
 
