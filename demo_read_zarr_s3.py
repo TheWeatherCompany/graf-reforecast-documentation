@@ -32,6 +32,8 @@ cvar is the variable name,
 	total_cloud_cover, rain_bucket, conv_bucket
 	zrain_bucket, snow_bucket, apcp_bucket
 
+dry-run is the variable that decides if the netcdf latlong file should be pulled from S3 or local. Accepts True or False. True by default
+
 Example:
 	$python demo_read_zarr_s3.py 2023122012 12 apcp_bucket
 
@@ -257,7 +259,10 @@ def plot_data(data_array, lons, lats, title, plot_file, clevs, cvar, clabel):
 cyyyymmddhh = sys.argv[1] # the desired initial cond. in year-month-day-hour format
 clead = sys.argv[2] # lead time in hours and fractions of hours, e.g., 12 or 12.25
 cvar = sys.argv[3]
-
+dry_run = False
+if len(sys.argv) > 4:
+	dry_run = sys.argv[4]
+print('dry run' + str(dry_run))
 # --- define a dictionary with plotting information.
 
 valid_variables = ['t2m', 'u10', 'v10', 'mslp', 'dewpoint_2m', 'visibility',\
@@ -337,8 +342,18 @@ try:
 	# ---- Read from a netcdf file the lat/lon of the unstructured mesh
 	#	   grid points.
 	
-	latlonfile = 'rpm4km.static.latlon.nc'
+	if dry_run == 'True' or dry_run is True:
+		fs = s3fs.S3FileSystem(anon=True)
+		fs.download('s3://twc-graf-reforecast/rpm4km.static.nc', '.')
+		latlonfile = 'rpm4km.static.nc'
+	else:
+		latlonfile = 'rpm4km.static.latlon.nc'
 	nc = Dataset(latlonfile, 'r')
+	# Initialize s3 client with s3fs
+	
+	# Open with s3fs
+	# f = fs.open("s3://noaa-goes16/ABI-L2-MCMIPM/2021/241/14/OR_ABI-L2-MCMIPM1-M6_G16_s20212411400278_e20212411400347_c20212411400421.nc")
+	
 	lats = nc.variables['latCell'][:]*180./3.141592656
 	lons = nc.variables['lonCell'][:]*180./3.141592656
 	print ('max, min lons = ', np.max(lons), np.min(lons))
@@ -408,6 +423,9 @@ try:
 except ValueError: 
 	print ('ValueError found.  Exiting.')
 	sys.exit()
+finally:
+	if os.path.exists('rpm4km.static.nc'):
+		os.remove('rpm4km.static.nc')
 
 
 
