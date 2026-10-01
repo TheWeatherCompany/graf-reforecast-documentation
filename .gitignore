@@ -193,3 +193,8 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 .python-version
+
+# Output of the demo scripts
+GRAFR_*.png
+GRAFR_*.gif
+GRAF_CONUS_grid_cache.npz
