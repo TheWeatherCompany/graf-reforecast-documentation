@@ -33,6 +33,7 @@ pyparsing==3.2.3
 pyproj==3.7.1
 pyshp==2.3.1
 python-dateutil==2.9.0.post0
+scipy==1.16.0
 pytz==2025.2
 PyYAML==6.0.2
 s3fs==2025.5.1
